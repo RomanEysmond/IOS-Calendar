@@ -1,0 +1,19 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- iOS-style фон: светлый с легкой тенью -->
+    <solid android:color="#FFFFFF"/>
+
+    <!-- Скругленные углы как в iOS -->
+    <corners android:radius="40dp"/>
+
+    <!-- Легкая граница -->
+    <stroke
+        android:width="0.5dp"
+        android:color="#FFFFFF"/>
+
+    <!-- Тень как в iOS -->
+    <padding
+        android:left="1dp"
+        android:top="1dp"
+        android:right="1dp"
+        android:bottom="1dp"/>
+</shape>
