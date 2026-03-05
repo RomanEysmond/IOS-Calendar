@@ -6,4 +6,16 @@
     <color name="light_blue_200">#FF81D4FA</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF01579B</color>
+
+    <color name="calendar_background">#FFFFFF</color>          <!-- фон календаря -->
+    <color name="calendar_text_current_month">#000000</color>  <!-- текст текущего месяца -->
+    <color name="calendar_text_other_month">#B0B0B0</color>    <!-- текст соседних месяцев -->
+    <color name="calendar_today_circle">#FF3B30</color>        <!-- кружок сегодня (красный) -->
+    <color name="calendar_selected_circle">#007AFF</color>     <!-- кружок выбранной даты (синий) -->
+    <color name="calendar_selected_text">#FFFFFF</color>       <!-- текст на выбранной дате (белый) -->
+    <color name="calendar_today_text">#FFFFFF</color>          <!-- текст на сегодня (белый) -->
+    <color name="calendar_weekday_text">#8E8E93</color>        <!-- дни недели (серый) -->
+    <color name="calendar_month_year_text">#000000</color>     <!-- месяц/год в заголовке -->
+    <color name="calendar_nav_button_tint">#000000</color>     <!-- цвет стрелок навигации -->
+
 </resources>

@@ -3,10 +3,12 @@ package com.example.example
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.time.DayOfWeek
@@ -28,10 +30,15 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     private var currentMonth: Int = LocalDate.now().monthValue
 
+    private var selectedDate: LocalDate? = null
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        findViewById<View>(android.R.id.content).rootView.setBackgroundColor(
+            ContextCompat.getColor(this, R.color.calendar_background)
+        )
 
         recyclerView = findViewById(R.id.calendarRecyclerView)
         monthYearText = findViewById(R.id.monthYearText)
@@ -42,7 +49,19 @@ class MainActivity : AppCompatActivity() {
 
 
         adapter = CalendarAdapter(emptyList()) { date ->
-            Toast.makeText(this, "Выбрана $date", Toast.LENGTH_SHORT).show()
+            // Обработка клика по дате
+            if (date.monthValue != currentMonth || date.year != currentYear) {
+                // Если дата из другого месяца – переключаемся на этот месяц
+                currentYear = date.year
+                currentMonth = date.monthValue
+                selectedDate = date
+                loadMonth(currentYear, currentMonth)
+            } else {
+                // Дата в текущем месяце
+                selectedDate = date
+                adapter.setSelectedDate(selectedDate)
+                Toast.makeText(this, "Выбрана $date", Toast.LENGTH_SHORT).show()
+            }
         }
         recyclerView.adapter = adapter
 

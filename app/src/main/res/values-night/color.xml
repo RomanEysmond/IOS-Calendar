@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="calendar_background">#121212</color>          <!-- тёмный фон -->
+    <color name="calendar_text_current_month">#FFFFFF</color>  <!-- белый текст -->
+    <color name="calendar_text_other_month">#5E5E5E</color>    <!-- тёмно-серый -->
+    <color name="calendar_today_circle">#FF453A</color>        <!-- красный (яркий) -->
+    <color name="calendar_selected_circle">#0A84FF</color>     <!-- синий -->
+    <color name="calendar_selected_text">#FFFFFF</color>       <!-- белый -->
+    <color name="calendar_today_text">#FFFFFF</color>
+    <color name="calendar_weekday_text">#8E8E93</color>        <!-- можно оставить -->
+    <color name="calendar_month_year_text">#FFFFFF</color>
+    <color name="calendar_nav_button_tint">#FFFFFF</color>
+</resources>
