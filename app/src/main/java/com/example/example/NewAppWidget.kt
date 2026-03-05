@@ -1,8 +1,10 @@
 package com.example.example
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
+import android.content.Intent
 import android.widget.RemoteViews
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -19,7 +21,31 @@ class NewAppWidget : AppWidgetProvider() {
     ) {
         // There may be multiple widgets active, so update all of them
         for (appWidgetId in appWidgetIds) {
-            updateAppWidget(context, appWidgetManager, appWidgetId)
+            // Создаём Intent для запуска вашей MainActivity
+            val intent = Intent(context, MainActivity::class.java).apply {
+                // Флаг FLAG_ACTIVITY_NEW_TASK обязателен для запуска из виджета [citation:10]
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                // Добавляем идентификатор, чтобы открывался именно этот экземпляр
+                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+            }
+
+            // Создаём PendingIntent [citation:6]
+            val pendingIntent = PendingIntent.getActivity(
+                context,
+                appWidgetId, // requestCode (используем ID виджета для уникальности)
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+
+            // Связываем RemoteViews с вашим layout
+            val views = RemoteViews(context.packageName, R.layout.new_app_widget)
+
+            // Устанавливаем PendingIntent на корневой элемент виджета [citation:10]
+            // Если хотите, чтобы кликабельной была конкретная кнопка, замените R.id.widget на R.id.your_button_id
+            views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
+
+            // Обновляем виджет
+            appWidgetManager.updateAppWidget(appWidgetId, views)
         }
     }
 

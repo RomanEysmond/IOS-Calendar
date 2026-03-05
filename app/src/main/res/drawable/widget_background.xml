@@ -3,7 +3,7 @@
     <solid android:color="#FFFFFF"/>
 
     <!-- Скругленные углы как в iOS -->
-    <corners android:radius="40dp"/>
+    <corners android:radius="20dp"/>
 
     <!-- Легкая граница -->
     <stroke
