@@ -19,7 +19,7 @@
             android:id="@+id/prevMonthButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/ic_arr_left"
             android:contentDescription="Previous month" />
 
         <TextView
@@ -37,7 +37,7 @@
             android:id="@+id/nextMonthButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+            android:background="@drawable/ic_arr_right"
             android:contentDescription="Next month" />
     </LinearLayout>
 
