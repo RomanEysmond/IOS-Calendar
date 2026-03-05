@@ -1,5 +1,6 @@
 package com.example.example
 
+import android.graphics.Color
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
@@ -21,22 +22,24 @@ class CalendarAdapter(
         private val tvDay: TextView = itemView.findViewById(R.id.tvDay)
 
         fun bind(dayItem: DayItem, today: LocalDate, onClick: (LocalDate) -> Unit) {
-            if (dayItem.dayOfMonth == 0) {
-                // Пустая ячейка
-                tvDay.text = ""
-                tvDay.background = null
-                itemView.setOnClickListener(null)
+            tvDay.text = dayItem.dayOfMonth.toString()
+
+            // Цвет текста: чёрный для текущего месяца, серый для остальных
+            if (dayItem.isCurrentMonth) {
+                tvDay.setTextColor(Color.BLACK)
             } else {
-                tvDay.text = dayItem.dayOfMonth.toString()
-                // Подсветка сегодняшнего дня
-                if (dayItem.date == today) {
-                    tvDay.setBackgroundResource(R.drawable.circle_today) // круглый фон
-                } else {
-                    tvDay.background = null
-                }
-                itemView.setOnClickListener {
-                    dayItem.date?.let { onClick(it) }
-                }
+                tvDay.setTextColor(Color.parseColor("#B0B0B0")) // светло-серый
+            }
+
+            // Подсветка сегодняшнего дня (красный кружок)
+            if (dayItem.date == today) {
+                tvDay.setBackgroundResource(R.drawable.circle_today)
+            } else {
+                tvDay.background = null
+            }
+
+            itemView.setOnClickListener {
+                dayItem.date?.let { onClick(it) }
             }
         }
     }
@@ -61,8 +64,9 @@ class CalendarAdapter(
 
 }
 
-// Дата-класс для элемента сетки
+
 data class DayItem(
-    val date: LocalDate?,        // null для пустых ячеек
-    val dayOfMonth: Int           // 0 для пустых ячеек
+    val date: LocalDate?,
+    val dayOfMonth: Int,
+    val isCurrentMonth: Boolean
 )

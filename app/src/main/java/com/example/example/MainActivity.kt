@@ -91,40 +91,42 @@ fun generateDaysForMonth(year: Int, month: Int): List<DayItem> {
     val firstOfMonth = yearMonth.atDay(1)
     val lastOfMonth = yearMonth.atEndOfMonth()
 
-    // День недели первого числа (понедельник = 1, воскресенье = 7, но в Java Sunday = 7, а нам нужно под нашу неделю)
-    // Пусть неделя начинается с воскресенья, как в iOS (или понедельника, смотря как вам нужно)
-    val firstDayOfWeek =
-        firstOfMonth.dayOfWeek.value % 7  // в Java Monday=1, Sunday=7; преобразуем: воскресенье станет 0
-    // Для iOS-календаря неделя обычно начинается с воскресенья. Тогда индекс первого дня: если воскресенье = 0, понедельник = 1, …, суббота = 6.
-    // В Java DayOfWeek.SUNDAY.getValue() = 7, поэтому firstDayOfWeekIndex = (7 - firstDayOfWeekValue) % 7? Проще вычислить смещение.
 
-    // Упростим: будем считать, что дни недели начинаются с воскресенья.
+    val firstDayOfWeek = firstOfMonth.dayOfWeek.value % 7
+
     val startOffset = when (firstOfMonth.dayOfWeek) {
-        DayOfWeek.SUNDAY -> 6
         DayOfWeek.MONDAY -> 0
         DayOfWeek.TUESDAY -> 1
         DayOfWeek.WEDNESDAY -> 2
         DayOfWeek.THURSDAY -> 3
         DayOfWeek.FRIDAY -> 4
         DayOfWeek.SATURDAY -> 5
+        DayOfWeek.SUNDAY -> 6
     }
 
     val days = mutableListOf<DayItem>()
 
     // Дни предыдущего месяца (пустые)
-    for (i in 0 until startOffset) {
-        days.add(DayItem(null, 0))
+    val prevMonth = yearMonth.minusMonths(1)
+    val prevMonthLength = prevMonth.lengthOfMonth()
+    val prevMonthStartDay = prevMonthLength - startOffset + 1
+    for (day in prevMonthStartDay..prevMonthLength) {
+        val date = prevMonth.atDay(day)
+        days.add(DayItem(date, day, false))
     }
-
     // Дни текущего месяца
     for (day in 1..yearMonth.lengthOfMonth()) {
-        days.add(DayItem(yearMonth.atDay(day), day))
+        val date = yearMonth.atDay(day)
+        days.add(DayItem(date, day, true))
     }
 
     // Дни следующего месяца (пустые) до 42
-    val remaining = 42 - days.size
-    for (i in 0 until remaining) {
-        days.add(DayItem(null, 0))
+    val nextMonth = yearMonth.plusMonths(1)
+    var nextDay = 1
+    while (days.size < 42) {
+        val date = nextMonth.atDay(nextDay)
+        days.add(DayItem(date, nextDay, false))
+        nextDay++
     }
 
     return days
