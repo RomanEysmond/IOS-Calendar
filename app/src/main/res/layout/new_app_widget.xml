@@ -51,7 +51,7 @@
         android:gravity="center|center_horizontal"
         android:text="Календарь"
         android:textColor="#FFFFFF"
-        android:textSize="18sp"
+        android:textSize="7sp"
         />
     <!--textSize для Vivo 18dp-->
 
