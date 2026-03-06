@@ -19,18 +19,15 @@ class NewAppWidget : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        // There may be multiple widgets active, so update all of them
+
         for (appWidgetId in appWidgetIds) {
-            // Создаём Intent для запуска вашей MainActivity
+
             val intent = Intent(context, MainActivity::class.java).apply {
-                // Флаг FLAG_ACTIVITY_NEW_TASK обязателен для запуска из виджета [citation:10]
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                // Добавляем идентификатор, чтобы открывался именно этот экземпляр
                 putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             }
 
-            // Создаём PendingIntent [citation:6]
-            val pendingIntent = PendingIntent.getActivity(
+                       val pendingIntent = PendingIntent.getActivity(
                 context,
                 appWidgetId, // requestCode (используем ID виджета для уникальности)
                 intent,
@@ -44,8 +41,8 @@ class NewAppWidget : AppWidgetProvider() {
             // Если хотите, чтобы кликабельной была конкретная кнопка, замените R.id.widget на R.id.your_button_id
             views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
 
-            // Обновляем виджет
             appWidgetManager.updateAppWidget(appWidgetId, views)
+            updateAppWidget(context, appWidgetManager, appWidgetId)
         }
     }
 
