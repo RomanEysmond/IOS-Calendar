@@ -21,27 +21,6 @@ class NewAppWidget : AppWidgetProvider() {
     ) {
 
         for (appWidgetId in appWidgetIds) {
-
-            val intent = Intent(context, MainActivity::class.java).apply {
-                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            }
-
-                       val pendingIntent = PendingIntent.getActivity(
-                context,
-                appWidgetId, // requestCode (используем ID виджета для уникальности)
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            )
-
-            // Связываем RemoteViews с вашим layout
-            val views = RemoteViews(context.packageName, R.layout.new_app_widget)
-
-            // Устанавливаем PendingIntent на корневой элемент виджета [citation:10]
-            // Если хотите, чтобы кликабельной была конкретная кнопка, замените R.id.widget на R.id.your_button_id
-            views.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
-
-            appWidgetManager.updateAppWidget(appWidgetId, views)
             updateAppWidget(context, appWidgetManager, appWidgetId)
         }
     }
@@ -67,8 +46,22 @@ internal fun updateAppWidget(
     val currentDayOfWeek = getDayOfWeekInRussian(calendar)
 
     remoteViews.setTextViewText(R.id.tv_day, "$currentDay")
-
     remoteViews.setTextViewText(R.id.tv_day_of_week, "$currentDayOfWeek")
+
+    val intent = Intent(context, MainActivity::class.java).apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
+    }
+
+    val pendingIntent = PendingIntent.getActivity(
+        context,
+        appWidgetId,
+        intent,
+        PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+    )
+
+    remoteViews.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
+
 
     appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
 }
