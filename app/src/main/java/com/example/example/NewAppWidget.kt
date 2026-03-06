@@ -6,9 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
 import android.widget.RemoteViews
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Locale
 
 /**
  * Implementation of App Widget functionality.
@@ -45,8 +43,8 @@ internal fun updateAppWidget(
     val currentDay = calendar.get(Calendar.DAY_OF_MONTH).toString()
     val currentDayOfWeek = getDayOfWeekInRussian(calendar)
 
-    remoteViews.setTextViewText(R.id.tv_day, "$currentDay")
-    remoteViews.setTextViewText(R.id.tv_day_of_week, "$currentDayOfWeek")
+    remoteViews.setTextViewText(R.id.tv_day, currentDay)
+    remoteViews.setTextViewText(R.id.tv_day_of_week, currentDayOfWeek)
 
     val intent = Intent(context, MainActivity::class.java).apply {
         addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -61,7 +59,6 @@ internal fun updateAppWidget(
     )
 
     remoteViews.setOnClickPendingIntent(R.id.widget_root, pendingIntent)
-
 
     appWidgetManager.updateAppWidget(appWidgetId, remoteViews)
 }
