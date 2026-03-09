@@ -143,4 +143,56 @@
         app:layout_constraintTop_toBottomOf="@id/linear_layout_2"
         app:spanCount="7" />
 
+    <LinearLayout
+        android:id="@+id/notes_section"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Информация о выбранной дате -->
+        <TextView
+            android:id="@+id/selectedDateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Дата не выбрана"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Кнопка добавления заметки -->
+        <Button
+            android:id="@+id/addNoteButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+ Добавить заметку"
+            android:backgroundTint="@color/calendar_selected_circle"
+            android:layout_marginBottom="8dp"
+            android:enabled="false" />
+
+        <!-- Список заметок -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/notesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- Сообщение, если нет заметок -->
+        <TextView
+            android:id="@+id/emptyNotesText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Нет заметок для выбранной даты"
+            android:textSize="16sp"
+            android:textColor="#8E8E93"
+            android:gravity="center"
+            android:padding="16dp"
+            android:visibility="visible" />
+
+    </LinearLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

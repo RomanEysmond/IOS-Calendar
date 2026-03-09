@@ -1,6 +1,6 @@
 package com.example.example
 
-import android.graphics.Color
+import android.annotation.SuppressLint
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.example.note.Note
 import java.time.LocalDate
 
 class CalendarAdapter(
@@ -21,17 +22,28 @@ class CalendarAdapter(
     private val today = LocalDate.now()
     private var selectedDate: LocalDate? = null
 
+    private var notesMap: Map<LocalDate, List<Note>> = emptyMap()
+
+
+
+    @SuppressLint("NotifyDataSetChanged")
     fun setSelectedDate(date: LocalDate?) {
         selectedDate = date
         notifyDataSetChanged() // обновляем все ячейки, чтобы снять/установить выделение
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val tvDay: TextView = itemView.findViewById(R.id.tvDay)
+        val tvDay: TextView = itemView.findViewById(R.id.tvDay)
 
+        val noteIndicator: View = itemView.findViewById(R.id.noteIndicator)
+
+        @SuppressLint("SetTextI18n")
         fun bind(dayItem: DayItem, today: LocalDate, selectedDate: LocalDate?, onClick: (LocalDate) -> Unit) {
             val context = itemView.context
             tvDay.text = dayItem.dayOfMonth.toString()
+
+            tvDay.background = null
+            tvDay.alpha = 1.0f
 
             // Цвет текста по умолчанию (без фона)
             val defaultTextColor = if (dayItem.isCurrentMonth) {
@@ -40,7 +52,6 @@ class CalendarAdapter(
                 ContextCompat.getColor(context, R.color.calendar_text_other_month)
             }
             tvDay.setTextColor(defaultTextColor)
-            tvDay.background = null
 
             // Определяем, нужно ли рисовать кружок
             val circleColor = when {
@@ -55,6 +66,8 @@ class CalendarAdapter(
                 background.shape = GradientDrawable.OVAL
                 background.setColor(ContextCompat.getColor(context, circleColor))
                 tvDay.background = background
+
+
 
                 // Цвет текста поверх кружка
                 val textColorRes = if (dayItem.date == selectedDate) {
@@ -79,14 +92,33 @@ class CalendarAdapter(
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(days[position], today, selectedDate, onItemClick)
+        val dayItem = days[position]
+        holder.bind(dayItem, today, selectedDate, onItemClick)
+
+        val hasNotes = notesMap[dayItem.date]?.isNotEmpty() == true
+        holder.noteIndicator.visibility = if (hasNotes && dayItem.isCurrentMonth) View.VISIBLE else View.GONE
+
+        // Устанавливаем альфа-канал для дней не из текущего месяца
+        if (!dayItem.isCurrentMonth) {
+            holder.tvDay.alpha = 0.5f
+            holder.noteIndicator.alpha = 0.3f
+        } else {
+            holder.tvDay.alpha = 1.0f
+            holder.noteIndicator.alpha = 1.0f
+        }
     }
 
 
     override fun getItemCount() = days.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateDays(newDays: List<DayItem>) {
         days = newDays
+        notifyDataSetChanged()
+    }
+
+    fun setNotes(notes: List<Note>) {
+        notesMap = notes.groupBy { it.date }
         notifyDataSetChanged()
     }
 
