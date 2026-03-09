@@ -160,7 +160,7 @@
             android:layout_height="wrap_content"
             android:text="Дата не выбрана"
             android:textSize="16sp"
-            android:textColor="@color/black"
+            android:textColor="?attr/colorControlNormal"
             android:layout_marginBottom="8dp" />
 
         <!-- Кнопка добавления заметки -->

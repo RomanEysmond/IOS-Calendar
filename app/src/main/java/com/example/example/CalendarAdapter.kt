@@ -11,6 +11,7 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.example.note.Note
+import com.google.android.material.internal.ViewUtils.dpToPx
 import java.time.LocalDate
 
 class CalendarAdapter(
@@ -25,7 +26,6 @@ class CalendarAdapter(
     private var notesMap: Map<LocalDate, List<Note>> = emptyMap()
 
 
-
     @SuppressLint("NotifyDataSetChanged")
     fun setSelectedDate(date: LocalDate?) {
         selectedDate = date
@@ -37,8 +37,13 @@ class CalendarAdapter(
 
         val noteIndicator: View = itemView.findViewById(R.id.noteIndicator)
 
-        @SuppressLint("SetTextI18n")
-        fun bind(dayItem: DayItem, today: LocalDate, selectedDate: LocalDate?, onClick: (LocalDate) -> Unit) {
+        @SuppressLint("SetTextI18n", "RestrictedApi")
+        fun bind(
+            dayItem: DayItem,
+            today: LocalDate,
+            selectedDate: LocalDate?,
+            onClick: (LocalDate) -> Unit
+        ) {
             val context = itemView.context
             tvDay.text = dayItem.dayOfMonth.toString()
 
@@ -60,14 +65,12 @@ class CalendarAdapter(
                 else -> null
             }
 
-            if (circleColor != null) {
+            if (circleColor != null && dayItem.isCurrentMonth) {
                 // Создаём круглый фон
                 val background = GradientDrawable()
                 background.shape = GradientDrawable.OVAL
                 background.setColor(ContextCompat.getColor(context, circleColor))
                 tvDay.background = background
-
-
 
                 // Цвет текста поверх кружка
                 val textColorRes = if (dayItem.date == selectedDate) {
@@ -96,7 +99,8 @@ class CalendarAdapter(
         holder.bind(dayItem, today, selectedDate, onItemClick)
 
         val hasNotes = notesMap[dayItem.date]?.isNotEmpty() == true
-        holder.noteIndicator.visibility = if (hasNotes && dayItem.isCurrentMonth) View.VISIBLE else View.GONE
+        holder.noteIndicator.visibility =
+            if (hasNotes && dayItem.isCurrentMonth) View.VISIBLE else View.GONE
 
         // Устанавливаем альфа-канал для дней не из текущего месяца
         if (!dayItem.isCurrentMonth) {
