@@ -1,5 +1,6 @@
 package com.example.example
 
+import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.example.data.NotesPreferences
 import com.example.example.note.Note
 import com.example.example.note.NoteDialog
 import com.example.example.note.NotesAdapter
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var selectedDateText: TextView
     private lateinit var emptyNotesText: TextView
 
+    private lateinit var notesPreferences: NotesPreferences
     private val notes = mutableListOf<Note>()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -52,7 +55,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+
         setContentView(R.layout.activity_main)
+        notesPreferences = NotesPreferences(this)
+        loadNotesFromStorage()
         findViewById<View>(android.R.id.content).rootView.setBackgroundColor(
             ContextCompat.getColor(this, R.color.calendar_background)
         )
@@ -104,7 +111,7 @@ class MainActivity : AppCompatActivity() {
                 adapter.setSelectedDate(selectedDate)
                 updateSelectedDateText()
                 showNotesForSelectedDate()
-                Toast.makeText(this, "Выбрана ${formatDate(date)}", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "Выбрана ${formatDate(date)}", Toast.LENGTH_SHORT).show()
             }
         }
         recyclerView.adapter = adapter
@@ -201,6 +208,9 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
 
+                // Сохраняем в SharedPreferences
+                saveNotesToStorage()
+
                 // Обновление UI
                 adapter.setNotes(notes)
                 showNotesForSelectedDate()
@@ -224,6 +234,7 @@ class MainActivity : AppCompatActivity() {
             .setPositiveButton("Да") { _, _ ->
                 notes.remove(note)
                 adapter.setNotes(notes)
+                saveNotesToStorage() // Сохраняем после удаления
                 showNotesForSelectedDate()
                 Toast.makeText(this, "Заметка удалена", Toast.LENGTH_SHORT).show()
             }
@@ -308,5 +319,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         return days
+    }
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun loadNotesFromStorage() {
+        notes.clear()
+        notes.addAll(notesPreferences.loadNotes())
+    }
+    private fun saveNotesToStorage() {
+        notesPreferences.saveNotes(notes)
     }
 }

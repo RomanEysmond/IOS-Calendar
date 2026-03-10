@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp">
@@ -16,9 +17,10 @@
         android:id="@+id/noteIndicator"
         android:layout_width="6dp"
         android:layout_height="6dp"
-        android:layout_gravity="bottom|center_horizontal"
+        android:layout_gravity="top|left"
         android:layout_marginBottom="4dp"
         android:background="@drawable/note_indicator"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:ignore="RtlHardcoded" />
 
 </FrameLayout>
