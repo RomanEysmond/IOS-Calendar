@@ -2,7 +2,6 @@ package com.example.example.note
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import java.io.Serializable
 import java.time.LocalDate
 
 data class Note(

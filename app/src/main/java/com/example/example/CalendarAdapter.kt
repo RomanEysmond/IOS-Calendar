@@ -11,7 +11,6 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.example.note.Note
-import com.google.android.material.internal.ViewUtils.dpToPx
 import java.time.LocalDate
 
 class CalendarAdapter(

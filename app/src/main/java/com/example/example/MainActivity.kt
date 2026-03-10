@@ -1,6 +1,6 @@
 package com.example.example
 
-import android.content.Context
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -167,6 +167,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadMonth(year: Int, month: Int) {
         val days = generateDaysForMonth(year, month)
@@ -242,6 +243,7 @@ class MainActivity : AppCompatActivity() {
             .show()
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showNotesForSelectedDate() {
         selectedDate?.let { date ->
@@ -259,6 +261,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     @RequiresApi(Build.VERSION_CODES.O)
     private fun updateSelectedDateText() {
         selectedDate?.let { date ->
