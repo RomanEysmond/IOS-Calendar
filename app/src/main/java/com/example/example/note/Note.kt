@@ -8,7 +8,7 @@ data class Note(
     val date: LocalDate,
     val text: String
 ) {
-    // Для GSON нужно хранить дату как строку
+   /* // Для GSON нужно хранить дату как строку
     fun toMap(): Map<String, Any> = mapOf(
         "date" to date.toString(),
         "text" to text
@@ -21,5 +21,5 @@ data class Note(
             val text = map["text"] as String
             return Note(LocalDate.parse(dateStr), text)
         }
-    }
+    }*/
 }
