@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
 
 
 
-    //Zametki
+    //Заметки
     private fun initViews() {
         recyclerView = findViewById(R.id.calendarRecyclerView)
         monthYearText = findViewById(R.id.monthYearText)
