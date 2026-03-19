@@ -11,19 +11,20 @@ import java.time.LocalDate
 
 data class NoteData(
     val date: String,
-    val text: String
+    val text: String,
+    val id: String
 ) {
     // Конвертация в Note
     @RequiresApi(Build.VERSION_CODES.O)
     fun toNote(): Note? = try {
-        Note(LocalDate.parse(date), text)
+        Note(LocalDate.parse(date), text, id)
     } catch (e: Exception) {
         null
     }
 
     companion object {
         // Конвертация из Note
-        fun fromNote(note: Note): NoteData = NoteData(note.date.toString(), note.text)
+        fun fromNote(note: Note): NoteData = NoteData(note.date.toString(), note.text, note.id)
     }
 }
 

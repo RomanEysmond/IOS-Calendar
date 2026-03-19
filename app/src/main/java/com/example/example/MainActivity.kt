@@ -192,39 +192,61 @@ class MainActivity : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showNoteDialog(date: LocalDate, existingNote: Note?) {
+        val notesForDate = notes.filter { it.date == date }
+        val currentCount = notesForDate.size
+
         val dialog = NoteDialog(
             date = date,
             existingNote = existingNote,
+            currentNotesCount = currentCount,  // ДОБАВЛЕНО: передаем текущее количество заметок
             onSave = { note ->
-                if (note.text.isEmpty()) {
-                    // Удаление заметки
-                    notes.removeAll { it.date == note.date }
-                } else {
-                    // Добавление или обновление заметки
-                    val existingIndex = notes.indexOfFirst { it.date == note.date }
-                    if (existingIndex >= 0) {
-                        notes[existingIndex] = note
-                    } else {
-                        notes.add(note)
-                    }
-                }
-
-                // Сохраняем в SharedPreferences
-                saveNotesToStorage()
-
-                // Обновление UI
-                adapter.setNotes(notes)
-                showNotesForSelectedDate()
-
-                val message = when {
-                    existingNote == null -> "Заметка добавлена"
-                    note.text.isEmpty() -> "Заметка удалена"
-                    else -> "Заметка обновлена"
-                }
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                saveNote(note)  // ДОБАВЛЕНО: используем новую функцию
+            },
+            onDelete = { note ->
+                deleteNote(note)  // ДОБАВЛЕНО: используем новую функцию
             }
         )
         dialog.show(supportFragmentManager, "NoteDialog")
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun saveNote(note: Note) {
+        val notesForDate = notes.filter { it.date == note.date }
+
+        // Проверяем, существует ли уже такая заметка (для редактирования)
+        val existingIndex = notes.indexOfFirst {
+            it.date == note.date && it.id == note.id  // ИЗМЕНЕНО: используем id для поиска
+        }
+
+        if (existingIndex >= 0) {
+            // Обновление существующей заметки
+            notes[existingIndex] = note
+            Toast.makeText(this, "Заметка обновлена", Toast.LENGTH_SHORT).show()
+        } else {
+            // Проверка лимита для новой заметки (ДОБАВЛЕНО)
+            if (notesForDate.size < 3) {
+                notes.add(note)
+                Toast.makeText(this, "Заметка добавлена", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Достигнут лимит заметок (максимум 3)", Toast.LENGTH_LONG).show()
+                return
+            }
+        }
+
+        // Сохраняем и обновляем UI
+        saveNotesToStorage()
+        adapter.setNotes(notes)
+        showNotesForSelectedDate()
+    }
+
+    // ДОБАВЛЕНО: Новая функция для удаления заметки
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun deleteNote(note: Note) {
+        notes.remove(note)
+        adapter.setNotes(notes)
+        saveNotesToStorage()
+        showNotesForSelectedDate()
+        Toast.makeText(this, "Заметка удалена", Toast.LENGTH_SHORT).show()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -233,10 +255,7 @@ class MainActivity : AppCompatActivity() {
             .setTitle("Удаление заметки")
             .setMessage("Вы уверены, что хотите удалить эту заметку?")
             .setPositiveButton("Да") { _, _ ->
-                notes.remove(note)
-                adapter.setNotes(notes)
-                saveNotesToStorage() // Сохраняем после удаления
-                showNotesForSelectedDate()
+                deleteNote(note)
                 Toast.makeText(this, "Заметка удалена", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Нет", null)

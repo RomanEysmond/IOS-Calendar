@@ -15,7 +15,9 @@ import java.time.format.DateTimeFormatter
 class NoteDialog(
     private val date: LocalDate,
     private val existingNote: Note?,
-    private val onSave: (Note) -> Unit
+    private val onSave: (Note) -> Unit,
+    private val currentNotesCount: Int,
+    private val onDelete: (Note) -> Unit
 ) : DialogFragment() {
 
     @SuppressLint("MissingInflatedId")
@@ -33,30 +35,67 @@ class NoteDialog(
         val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         val dateText = date.format(formatter)
 
+        //Проверка лимита заметок
+        val isLimitReached = !isEditing() && currentNotesCount >= 3
+
         builder.setView(view)
             .setTitle(if (existingNote == null) "Новая заметка" else "Редактирование заметки")
             .setMessage("Дата: $dateText")
-            .setPositiveButton("Сохранить") { _, _ ->
+            .setPositiveButton(if (isEditing()) "Сохранить" else "Добавить") { _, _ ->
                 val text = editText.text.toString()
                 if (text.isNotBlank()) {
-                    val note = existingNote?.copy(text = text) ?: Note(date, text)
-                    onSave(note)
+                    if (isEditing()) {
+                        // Редактирование существующей заметки
+                        val updatedNote = existingNote!!.copy(text = text)
+                        onSave(updatedNote)
+                    } else if (!isLimitReached) {
+                        // Новая заметка (проверяем лимит)
+                        val newNote = Note(date, text)
+                        onSave(newNote)
+                    }
                 }
             }
             .setNegativeButton("Отмена", null)
-            .setNeutralButton("Удалить") { _, _ ->
-                if (existingNote != null) {
-                    AlertDialog.Builder(requireActivity())
-                        .setTitle("Удаление заметки")
-                        .setMessage("Вы уверены, что хотите удалить эту заметку?")
-                        .setPositiveButton("Да") { _, _ ->
-                            onSave(existingNote.copy(text = "")) // Пустой текст = удаление
-                        }
-                        .setNegativeButton("Нет", null)
-                        .show()
-                }
+        if (isEditing()) {
+            builder.setNeutralButton("Удалить") { _, _ ->
+                showDeleteConfirmation()
             }
+        }
 
+        if (!isEditing() && isLimitReached) {
+            builder.setPositiveButton("Лимит достигнут", null)
+        }
         return builder.create()
     }
+
+    private fun isEditing() = existingNote != null
+
+    private fun getDialogTitle(): String {
+        return when {
+            isEditing() -> "Редактирование заметки"
+            currentNotesCount >= 3 -> "Лимит достигнут"
+            else -> "Новая заметка"
+        }
+    }
+
+    private fun getLimitInfo(): String {
+        return if (!isEditing()) {
+            "\nЗаметок на этот день: $currentNotesCount/3"
+        } else {
+            ""
+        }
+    }
+
+    // ДОБАВЛЕНО: подтверждение удаления
+    private fun showDeleteConfirmation() {
+        AlertDialog.Builder(requireActivity())
+            .setTitle("Удаление заметки")
+            .setMessage("Вы уверены, что хотите удалить эту заметку?")
+            .setPositiveButton("Да") { _, _ ->
+                onDelete(existingNote!!)
+            }
+            .setNegativeButton("Нет", null)
+            .show()
+    }
+
 }

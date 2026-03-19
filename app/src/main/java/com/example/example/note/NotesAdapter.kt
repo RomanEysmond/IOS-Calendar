@@ -16,10 +16,13 @@ class NotesAdapter(
     class NoteViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val noteText: TextView = itemView.findViewById(R.id.noteText)
         private val noteDate: TextView = itemView.findViewById(R.id.noteDate)
+        private val noteNumber: TextView = itemView.findViewById(R.id.noteNumber)
 
-        fun bind(note: Note) {
+
+        fun bind(note: Note, position: Int) {
             noteText.text = note.text
             noteDate.text = note.date.toString()
+            noteNumber.text = "#${position + 1}"
         }
     }
 
@@ -31,7 +34,7 @@ class NotesAdapter(
 
     override fun onBindViewHolder(holder: NoteViewHolder, position: Int) {
         val note = notes[position]
-        holder.bind(note)
+        holder.bind(note, position)
 
         holder.itemView.setOnClickListener {
             onNoteClick(note)
