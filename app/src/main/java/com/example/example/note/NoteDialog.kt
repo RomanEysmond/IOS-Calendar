@@ -39,9 +39,9 @@ class NoteDialog(
         val isLimitReached = !isEditing() && currentNotesCount >= 3
 
         builder.setView(view)
-            .setTitle(if (existingNote == null) "Новая заметка" else "Редактирование заметки")
-            .setMessage("Дата: $dateText")
-            .setPositiveButton(if (isEditing()) "Сохранить" else "Добавить") { _, _ ->
+            .setTitle(getDialogTitle())
+            .setMessage("Дата: $dateText${getLimitInfo()}")
+            .setPositiveButton(getPositiveButtonText()) { _, _ ->
                 val text = editText.text.toString()
                 if (text.isNotBlank()) {
                     if (isEditing()) {
@@ -66,6 +66,14 @@ class NoteDialog(
             builder.setPositiveButton("Лимит достигнут", null)
         }
         return builder.create()
+    }
+    //Функция текста кнопки
+    private fun getPositiveButtonText(): String {
+        return when {
+            isEditing() -> "Сохранить"
+            currentNotesCount >= 3 -> "Лимит достигнут"
+            else -> "Добавить"
+        }
     }
 
     private fun isEditing() = existingNote != null

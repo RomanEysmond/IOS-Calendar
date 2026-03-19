@@ -42,42 +42,33 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var notesPreferences: NotesPreferences
     private val notes = mutableListOf<Note>()
-
+    //Определение текущих дат
     @RequiresApi(Build.VERSION_CODES.O)
     private var currentYear: Int = LocalDate.now().year
-
     @RequiresApi(Build.VERSION_CODES.O)
     private var currentMonth: Int = LocalDate.now().monthValue
-
     private var selectedDate: LocalDate? = null
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-
-
         setContentView(R.layout.activity_main)
+
         notesPreferences = NotesPreferences(this)
         loadNotesFromStorage()
         findViewById<View>(android.R.id.content).rootView.setBackgroundColor(
             ContextCompat.getColor(this, R.color.calendar_background)
         )
-
         // Инициализируем все views
         initViews()
-
         // Настраиваем календарь
         setupCalendar()
-
         // Настраиваем заметки
         setupNotes()
-
         // Загружаем текущий месяц
         loadMonth(currentYear, currentMonth)
     }
-
-
 
     //Заметки
     private fun initViews() {
@@ -111,6 +102,7 @@ class MainActivity : AppCompatActivity() {
                 adapter.setSelectedDate(selectedDate)
                 updateSelectedDateText()
                 showNotesForSelectedDate()
+                updateAddButtonState()
                 //Toast.makeText(this, "Выбрана ${formatDate(date)}", Toast.LENGTH_SHORT).show()
             }
         }
@@ -190,6 +182,30 @@ class MainActivity : AppCompatActivity() {
         emptyNotesText.visibility = View.GONE
     }
 
+    //Обновление состояния кнопки добавления заметок
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun updateAddButtonState() {
+        selectedDate?.let { date ->
+            val notesForDate = notes.filter { it.date == date }
+            val isLimitReached = notesForDate.size >= 3
+
+            addNoteButton.isEnabled = !isLimitReached
+            addNoteButton.alpha = if (isLimitReached) 0.5f else 1.0f
+
+            // Опционально: меняем текст кнопки
+            if (isLimitReached) {
+                addNoteButton.text = "Лимит достигнут (макс. 3)"
+            } else {
+                addNoteButton.text = "+ Добавить заметку"
+            }
+        } ?: run {
+            addNoteButton.isEnabled = false
+            addNoteButton.alpha = 0.5f
+            addNoteButton.text = "+ Добавить заметку"
+        }
+    }
+
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun showNoteDialog(date: LocalDate, existingNote: Note?) {
         val notesForDate = notes.filter { it.date == date }
@@ -237,6 +253,7 @@ class MainActivity : AppCompatActivity() {
         saveNotesToStorage()
         adapter.setNotes(notes)
         showNotesForSelectedDate()
+        updateAddButtonState()
     }
 
     // ДОБАВЛЕНО: Новая функция для удаления заметки
@@ -246,6 +263,7 @@ class MainActivity : AppCompatActivity() {
         adapter.setNotes(notes)
         saveNotesToStorage()
         showNotesForSelectedDate()
+        updateAddButtonState()
         Toast.makeText(this, "Заметка удалена", Toast.LENGTH_SHORT).show()
     }
 
@@ -286,11 +304,10 @@ class MainActivity : AppCompatActivity() {
         selectedDate?.let { date ->
             selectedDateText.text = "Выбрана: ${formatDate(date)}"
             selectedDateText.visibility = View.VISIBLE
-            addNoteButton.isEnabled = true
         } ?: run {
             selectedDateText.text = "Дата не выбрана"
-            addNoteButton.isEnabled = false
         }
+        updateAddButtonState()
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

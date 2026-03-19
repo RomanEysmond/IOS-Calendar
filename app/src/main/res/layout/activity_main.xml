@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,9 +10,9 @@
         android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         android:layout_marginBottom="16dp"
         android:orientation="horizontal"
-        android:layout_marginTop="60dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <!--top был 20dp-->
@@ -21,10 +20,10 @@
             android:id="@+id/prevMonthButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_arr_left"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="?attr/colorControlNormal"
-            android:contentDescription="Previous month" />
+            android:contentDescription="Previous month"
+            android:src="@drawable/ic_arr_left"
+            app:tint="?attr/colorControlNormal" />
 
         <TextView
             android:id="@+id/monthYearText"
@@ -33,8 +32,8 @@
             android:layout_weight="1"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
-            android:textColor="@color/calendar_month_year_text"
             android:text="Март 2026"
+            android:textColor="@color/calendar_month_year_text"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -42,10 +41,10 @@
             android:id="@+id/nextMonthButton"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/ic_arr_right"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:tint="?attr/colorControlNormal"
-            android:contentDescription="Next month" />
+            android:contentDescription="Next month"
+            android:src="@drawable/ic_arr_right"
+            app:tint="?attr/colorControlNormal" />
     </LinearLayout>
 
 
@@ -147,51 +146,52 @@
         android:id="@+id/notes_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="60dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="60dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <!-- Информация о выбранной дате -->
         <TextView
             android:id="@+id/selectedDateText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:text="Дата не выбрана"
-            android:textSize="16sp"
             android:textColor="?attr/colorControlNormal"
-            android:layout_marginBottom="8dp" />
+            android:textSize="16sp" />
 
         <!-- Кнопка добавления заметки -->
         <Button
             android:id="@+id/addNoteButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="+ Добавить заметку"
-            android:backgroundTint="@color/calendar_selected_circle"
             android:layout_marginBottom="8dp"
-            android:enabled="false" />
+            android:alpha="0.5"
+            android:backgroundTint="@color/calendar_selected_circle"
+            android:enabled="false"
+            android:text="+ Добавить заметку" />
 
         <!-- Список заметок -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/notesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:nestedScrollingEnabled="false" />
+            android:nestedScrollingEnabled="false"
+            android:visibility="gone" />
 
         <!-- Сообщение, если нет заметок -->
         <TextView
             android:id="@+id/emptyNotesText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Нет заметок для выбранной даты"
-            android:textSize="16sp"
-            android:textColor="#8E8E93"
             android:gravity="center"
             android:padding="16dp"
+            android:text="Нет заметок для выбранной даты"
+            android:textColor="#8E8E93"
+            android:textSize="16sp"
             android:visibility="visible" />
 
     </LinearLayout>
