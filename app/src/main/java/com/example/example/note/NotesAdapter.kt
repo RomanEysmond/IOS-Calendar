@@ -1,5 +1,6 @@
 package com.example.example.note
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ class NotesAdapter(
         private val noteNumber: TextView = itemView.findViewById(R.id.noteNumber)
 
 
+        @SuppressLint("SetTextI18n")
         fun bind(note: Note, position: Int) {
             noteText.text = note.text
             noteDate.text = note.date.toString()

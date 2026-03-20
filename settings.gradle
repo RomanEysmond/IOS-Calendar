@@ -14,3 +14,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Example"
 include ':app'
+include ':di'
+include ':data'
+include ':note'
+include ':calendar'
+include ':widget'
+include ':application'
